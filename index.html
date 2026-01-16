@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMSPACED - Tenancy Records</title>
+    <meta name="description"
+        content="EMSPACED customer tenancy recording system for managing lease information and renewal dates.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="form">
+            <span class="nav-icon">📝</span>
+            <span>Add Record</span>
+        </button>
+        <button class="nav-tab" data-tab="dashboard">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+        </button>
+    </nav>
+
+    <div class="container">
+        <!-- Form View -->
+        <div class="tab-content active" id="formView">
+            <div class="form-wrapper">
+                <header class="header">
+                    <div class="logo-section">
+                        <div class="logo-icon">E</div>
+                        <h1>EMSPACED</h1>
+                    </div>
+                    <p class="subtitle">Tenancy Record Management</p>
+                </header>
+
+                <form id="tenancyForm" class="tenancy-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="companyName">
+                                <span class="label-text">Tenant Company Name</span>
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text" id="companyName" name="companyName"
+                                placeholder="e.g., Tech Solutions Sdn Bhd" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="roomNumber">
+                                <span class="label-text">Room Number</span>
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text" id="roomNumber" name="roomNumber" placeholder="e.g., A-101" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tenancyPeriod">
+                                <span class="label-text">Tenancy Period (months)</span>
+                                <span class="required">*</span>
+                            </label>
+                            <input type="number" id="tenancyPeriod" name="tenancyPeriod" placeholder="e.g., 12" min="1"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price">
+                                <span class="label-text">Monthly Price (RM)</span>
+                                <span class="required">*</span>
+                            </label>
+                            <input type="number" id="price" name="price" placeholder="e.g., 1500.00" step="0.01" min="0"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="startDate">
+                                <span class="label-text">Start Date</span>
+                                <span class="required">*</span>
+                            </label>
+                            <input type="date" id="startDate" name="startDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="endDate">
+                                <span class="label-text">End Date</span>
+                                <span class="required">*</span>
+                            </label>
+                            <input type="date" id="endDate" name="endDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="renewalDate">
+                                <span class="label-text">Renewal Date</span>
+                            </label>
+                            <input type="date" id="renewalDate" name="renewalDate">
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-text">Save Record</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <span class="btn-text">Clear Form</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div id="recordsSection" class="records-section" style="display: none;">
+                    <h2>Recent Records</h2>
+                    <div id="recordsList" class="records-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div class="tab-content" id="dashboardView">
+            <div class="dashboard-wrapper">
+                <header class="dashboard-header">
+                    <h1>Sales Dashboard</h1>
+                    <p class="dashboard-subtitle">Track tenancy renewals and contract expirations</p>
+                </header>
+
+                <!-- Dashboard Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"
+                            style="background: linear-gradient(135deg, hsl(260, 85%, 58%), hsl(280, 85%, 68%));">📋
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalTenancies">0</div>
+                            <div class="stat-label">Total Tenancies</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"
+                            style="background: linear-gradient(135deg, hsl(140, 70%, 50%), hsl(160, 70%, 60%));">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="activeTenancies">0</div>
+                            <div class="stat-label">Active Contracts</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"
+                            style="background: linear-gradient(135deg, hsl(40, 85%, 55%), hsl(30, 85%, 60%));">⚠️</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="expiringSoon">0</div>
+                            <div class="stat-label">Expiring Soon (30 days)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"
+                            style="background: linear-gradient(135deg, hsl(200, 85%, 55%), hsl(220, 85%, 65%));">🔄
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="upcomingRenewals">0</div>
+                            <div class="stat-label">Upcoming Renewals</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="dashboard-controls">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search by company name or room...">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="active">Active</button>
+                        <button class="filter-btn" data-filter="expiring">Expiring Soon</button>
+                        <button class="filter-btn" data-filter="renewal">Has Renewal</button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Table -->
+                <div class="dashboard-table-wrapper">
+                    <table class="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Room</th>
+                                <th>Tenancy Period</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Renewal Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    <div id="emptyDashboard" class="empty-state" style="display: none;">
+                        <div class="empty-icon">📊</div>
+                        <p>No tenancy records yet</p>
+                        <p class="empty-hint">Add your first record to see it here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
